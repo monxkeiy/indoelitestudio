@@ -6,10 +6,12 @@
   <title>Indo Elite Studio — Elite Aurora</title>
   <meta name="description" content="Indo Elite Studio: Roblox mountain & obby community. Elite Aurora edition."/>
   <link rel="icon" href="assets/logo.png"/>
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   <!-- Tailwind (CDN, no build needed) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -30,6 +32,7 @@
       }
     }
   </script>
+
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body class="min-h-screen bg-ink text-white antialiased selection:bg-brand-500/30 selection:text-white">
@@ -48,23 +51,6 @@
 
   <!-- NAVBAR -->
   <header class="sticky top-0 z-50 backdrop-blur-md bg-black/30 border-b border-white/10">
-    <!-- Mobile Drawer -->
-<div id="mobile-drawer" class="fixed inset-0 z-40 hidden">
-  <div class="drawer-backdrop"></div>
-  <div class="drawer-panel">
-    <div class="flex items-center justify-between mb-6">
-      <div class="font-display font-bold">Menu</div>
-      <button id="drawer-close" class="px-3 py-2 rounded-lg bg-white/5 ring-1 ring-white/10 hover:bg-white/10">Close</button>
-    </div>
-    <nav class="grid gap-3 text-sm">
-      <a href="#projects" class="drawer-link">Projects</a>
-      <a href="#team" class="drawer-link">Team</a>
-      <a href="#services" class="drawer-link">Services</a>
-      <a href="#contact" class="drawer-link">Contact</a>
-      <a id="drawer-discord" class="drawer-cta mt-2">Discord</a>
-    </nav>
-  </div>
-</div>
     <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
       <a href="#" class="flex items-center gap-3">
         <img src="assets/logo.png" class="w-9 h-9 rounded-lg ring-1 ring-white/10" alt="logo"/>
@@ -83,6 +69,24 @@
       <button id="mobile-menu" class="md:hidden inline-flex items-center gap-2 px-3 py-2 rounded-lg ring-1 ring-white/20 bg-white/5">Menu</button>
     </nav>
   </header>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-drawer" class="fixed inset-0 z-40 hidden">
+    <div class="drawer-backdrop"></div>
+    <div class="drawer-panel">
+      <div class="flex items-center justify-between mb-6">
+        <div class="font-display font-bold">Menu</div>
+        <button id="drawer-close" class="px-3 py-2 rounded-lg bg-white/5 ring-1 ring-white/10 hover:bg-white/10">Close</button>
+      </div>
+      <nav class="grid gap-3 text-sm">
+        <a href="#projects" class="drawer-link">Projects</a>
+        <a href="#team" class="drawer-link">Team</a>
+        <a href="#services" class="drawer-link">Services</a>
+        <a href="#contact" class="drawer-link">Contact</a>
+        <a id="drawer-discord" class="drawer-cta mt-2">Discord</a>
+      </nav>
+    </div>
+  </div>
 
   <main>
     <!-- HERO -->
@@ -106,7 +110,7 @@
         </div>
         <div class="relative">
           <div class="hero-card group reveal">
-            <img src="assets/logo.png" class="w-24 h-24 rounded-xl ring-1 ring-white/10 shadow-neon" alt="logo"/>
+            <img src="assets/logo.png" class="w-24 h-24 rounded-xl ring-1 ring-white/10 shadow-neon" alt="logo" loading="lazy"/>
             <div class="space-y-2">
               <h3 class="font-display text-2xl font-bold" id="hero-brand">Indo Elite Studio</h3>
               <p class="text-white/70">Premium Roblox mountain maps, smart checkpoint systems, and events.</p>
