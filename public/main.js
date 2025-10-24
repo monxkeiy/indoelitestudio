@@ -1,222 +1,127 @@
-/*
- * SCRIPT PERAKIT HALAMAN (MAIN LOGIC) - V4 (CYBER-GRID THEME)
- * Fungsionalitas inti (Scroll-Spy, Reveal, etc.) tidak berubah.
- * HANYA template HTML di dalam fungsi load...() yang di-update.
- */
-document.addEventListener('DOMContentLoaded', () => {
-    
-    if (typeof CONFIG === 'undefined') {
-        console.error('ERROR: config.js tidak ditemukan atau gagal di-load.');
-        return;
-    }
+/* Main logic Indo Elite Studio premium */
+(function(){
+  const C = window.IES_CONFIG || { brand: "Indo Elite Studio", socials: {} };
 
-    // --- INISIALISASI SEMUA FITUR ---
-    initDarkMode();
-    initDynamicNavbar();
-    initScrollReveal();
-    initScrollSpy();
-    loadPageContent();
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
-    console.log("Website Indo Elite Studio v4 (Cyber-Grid) berhasil dirakit!");
-});
+  function setBranding(){
+    $("#brand").textContent = C.brand;
+    $("#year").textContent = new Date().getFullYear();
+    const d = C.socials?.discord || "#";
+    const r = C.socials?.robloxGroup || "#";
+    $("#discord-link")?.setAttribute("href", d);
+    $("#cta-discord")?.setAttribute("href", d);
+    $("#about-discord")?.setAttribute("href", d);
+    $("#footer-discord")?.setAttribute("href", d);
+    $("#footer-roblox")?.setAttribute("href", r);
 
+    // Stats
+    $("#stat-projects").textContent = C.stats?.projects ?? C.projects?.length ?? "--";
+    $("#stat-events").textContent = C.stats?.events ?? "--";
+    $("#stat-community").textContent = C.stats?.members ?? "--";
+  }
 
-/**
- * (FIXED) Mengaktifkan Dark Mode Toggle
- * Logika klik sederhana. FOUC fix ada di <head>.
- */
-function initDarkMode() {
-    const toggleButton = document.getElementById('darkModeToggle');
-    const htmlElement = document.documentElement;
-    if (!toggleButton) return;
+  function projectCard(p){
+    const tags = (p.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("");
+    return `<article class="project reveal-on" data-type="${(p.type||[]).join(",")}">
+      <div class="cover" style="background-image:url('${p.cover}')"></div>
+      <div class="body">
+        <div class="title">${p.name}</div>
+        <p class="desc">${p.description||""}</p>
+        <div class="tags">${tags}</div>
+        <div class="actions">
+          <a class="btn-primary" href="${p.robloxUrl||"#"}" target="_blank" rel="noopener">Play</a>
+          <a class="btn-ghost" href="${p.discordUrl||C.socials?.discord||"#"}" target="_blank" rel="noopener">Discord</a>
+        </div>
+      </div>
+    </article>`;
+  }
 
-    toggleButton.addEventListener('click', () => {
-        const isDark = htmlElement.classList.contains('dark');
-        const newTheme = isDark ? 'light' : 'dark';
-        htmlElement.classList.toggle('dark', newTheme === 'dark');
-        localStorage.setItem('theme', newTheme);
+  function renderProjects(){
+    const grid = $("#projects-grid");
+    if(!grid) return;
+    grid.innerHTML = (C.projects||[]).map(projectCard).join("");
+
+    // Hover glow tracking
+    $$(".project").forEach(card => {
+      card.addEventListener("pointermove", (e)=>{
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(2) + "%";
+        const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(2) + "%";
+        card.style.setProperty("--mx", x);
+        card.style.setProperty("--my", y);
+      });
     });
-}
 
-/**
- * Mengubah UI Navbar (transparan -> frosted glass) saat di-scroll
- */
-function initDynamicNavbar() {
-    const header = document.getElementById('main-header');
-    if (!header) return;
-    const scrollThreshold = 50; 
-    window.addEventListener('scroll', () => {
-        header.classList.toggle('navbar-scrolled', window.scrollY > scrollThreshold);
-    }, { passive: true });
-}
-
-/**
- * Mengaktifkan animasi "Reveal on Scroll"
- */
-function initScrollReveal() {
-    const revealElements = document.querySelectorAll('.reveal-on-scroll');
-    if (revealElements.length === 0) return;
-    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target);
-            }
+    // Filtering
+    $$(".chip").forEach(chip=>{
+      chip.addEventListener("click", ()=>{
+        const f = chip.dataset.filter;
+        $$(".chip").forEach(c=>c.classList.remove("ring-brand-500","text-white"));
+        chip.classList.add("ring-brand-500","text-white");
+        $$(".project").forEach(card=>{
+          const type = card.getAttribute("data-type")||"";
+          if(f==="all" || type.includes(f)) card.style.display = "";
+          else card.style.display = "none";
         });
-    }, observerOptions);
-    revealElements.forEach(el => observer.observe(el));
-}
+      });
+    });
+  }
 
-/**
- * Mengaktifkan "Scroll-Spy" untuk menyorot link navbar yang aktif
- */
-function initScrollSpy() {
-    const sections = document.querySelectorAll('section[id], footer[id]');
-    const navLinks = document.querySelectorAll('.navbar-link');
-    if (sections.length === 0 || navLinks.length === 0) return;
-    const observerOptions = { root: null, rootMargin: '-50% 0px -50% 0px', threshold: 0 };
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const id = entry.target.getAttribute('id');
-                const activeLink = document.querySelector(`.navbar-link[data-target="#${id}"]`);
-                navLinks.forEach(link => link.classList.remove('active'));
-                if (activeLink) activeLink.classList.add('active');
-            }
-        });
-    }, observerOptions);
-    sections.forEach(section => observer.observe(section));
-}
+  function revealOnScroll(){
+    const items = $$(".reveal-on, .project.reveal-on");
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .12 });
+    items.forEach(el=> io.observe(el));
+  }
 
+  function heroPointerGlow(){
+    const card = $(".hero-card");
+    if(!card) return;
+    card.addEventListener("pointermove", (e)=>{
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(2) + "%";
+      const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(2) + "%";
+      card.style.setProperty("--mx", x);
+      card.style.setProperty("--my", y);
+    });
+  }
 
-// ===============================================
-// --- FUNGSI PEMUATAN KONTEN (TEMPLATE DI-UPDATE) ---
-// ===============================================
+  function preloader(){
+    const el = $("#preloader");
+    if(!el) return;
+    window.addEventListener("load", ()=>{
+      el.style.opacity = "0";
+      setTimeout(()=> el.remove(), 300);
+    });
+  }
 
-function loadPageContent() {
-    loadBasicInfo();
-    loadServices();
-    loadProjects();
-    loadTeam();
-    loadFooter();
-}
+  function mobileMenu(){
+    const btn = $("#mobile-menu");
+    if(!btn) return;
+    let open = false;
+    btn.addEventListener("click", ()=>{
+      open = !open;
+      // Simple demo: scroll to projects when opened
+      if(open){
+        document.location.hash = "#projects";
+      }
+    });
+  }
 
-function loadBasicInfo() {
-    document.title = CONFIG.studioName + " - Jasa Map Roblox";
-    document.getElementById('nav-brand').textContent = CONFIG.studioName;
-    document.getElementById('hero-title').textContent = CONFIG.studioName;
-}
-
-// Memuat Jasa & Harga (TEMPLATE DI-UPDATE)
-function loadServices() {
-    const container = document.getElementById('jasa-container');
-    const { services } = CONFIG;
-    if (!container || !services) return;
-    
-    let html = `
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold mb-3 text-neon-teal">${services.title}</h2>
-            <p class="text-lg text-dark-text mt-2">${services.note}</p>
-        </div>
-        <div class="grid md:grid-cols-2 gap-10">
-            ${services.packages.map(pkg => `
-                <div class="cyber-card">
-                    <h3 class="cyber-card-title">${pkg.title}</h3>
-                    <ul class="space-y-4">
-                        ${pkg.tiers.map(tier => `
-                            <li class="border-t border-border-color pt-4 first:border-t-0 first:pt-0">
-                                <p class="font-semibold text-light-text">${tier.name}</p>
-                                <p class="cyber-card-price">${tier.price}</p>
-                                <p class="text-sm text-dark-text mt-1">${tier.note}</p>
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
-            `).join('')}
-        </div>
-        <div class="mt-16 cyber-card">
-            <h3 class="cyber-card-title text-center">${services.features.title}</h3>
-            <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
-                ${services.features.categories.map(cat => `
-                    <div>
-                        <h4 class="text-xl font-bold mb-3 text-neon-pink">${cat.name}</h4>
-                        <ul class="list-disc list-inside space-y-1 text-dark-text">
-                            ${cat.items.map(item => `<li>${item}</li>`).join('')}
-                        </ul>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-    container.innerHTML = html;
-}
-
-// Memuat Grid Proyek (TEMPLATE DI-UPDATE)
-function loadProjects() {
-    const grid = document.getElementById('project-grid');
-    const { projects } = CONFIG;
-    if (!grid || !projects) return;
-    
-    grid.innerHTML = projects.map(project => `
-        <div class="cyber-card group !p-0 overflow-hidden">
-            <img src="${project.imageUrl}" alt="${project.title}" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
-            <div class="p-6">
-                <h3 class="cyber-card-title">${project.title}</h3>
-                <p class="cyber-card-desc mb-4">${project.description}</p>
-                <a href="${project.gameUrl}" target="_blank" rel="noopener noreferrer" 
-                   class="font-semibold font-mono text-neon-teal hover:text-neon-pink transition-colors">
-                    Lihat Game &rarr;
-                </a>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Memuat Grid Tim (TEMPLATE DI-UPDATE)
-function loadTeam() {
-    const grid = document.getElementById('team-grid');
-    const { team } = CONFIG;
-    if (!grid || !team) return;
-    
-    grid.innerHTML = team.map(member => `
-        <div class="cyber-card text-center">
-            <img src="${member.imageUrl}" alt="${member.name}" class="cyber-team-img">
-            <h3 class="text-2xl font-bold text-light-text">${member.name}</h3>
-            <p class="font-semibold text-neon-pink mb-3 font-mono">${member.role}</p>
-            <div class="flex justify-center space-x-4">
-                ${member.socials.map(social => `
-                    <a href="${social.url}" target="_blank" rel="noopener noreferrer" 
-                       class="text-dark-text hover:text-neon-teal text-2xl transition-colors">
-                        <ion-icon name="${social.icon}"></ion-icon>
-                    </a>
-                `).join('')}
-            </div>
-        </div>
-    `).join('');
-}
-
-// Memuat Footer (TEMPLATE DI-UPDATE)
-function loadFooter() {
-    const container = document.getElementById('footer-container');
-    const { socials, studioName } = CONFIG;
-    if (!container || !socials || !studioName) return;
-    
-    container.innerHTML = `
-        <h3 class="text-3xl font-bold mb-6 text-neon-teal">Hubungi Kami</h3>
-        <p class="text-lg mb-8 text-dark-text">Siap memulai project Anda? Hubungi kami melalui sosial media.</p>
-        
-        <div class="flex flex-wrap justify-center gap-6 md:gap-8 mb-8">
-            ${socials.map(social => `
-                <a href="${social.url}" target="_blank" rel="noopener noreferrer" 
-                   class="flex items-center text-lg text-dark-text hover:text-neon-teal transition-colors font-mono">
-                    <ion-icon name="${social.icon}" class="text-2xl mr-2"></ion-icon> ${social.name}
-                </a>
-            `).join('')}
-        </div>
-        
-        <div class="border-t border-border-color pt-8">
-            <p class="text-dark-text font-mono">&copy; ${new Date().getFullYear()} ${studioName}. All rights reserved.</p>
-        </div>
-    `;
-}
+  document.addEventListener("DOMContentLoaded", ()=>{
+    setBranding();
+    renderProjects();
+    revealOnScroll();
+    heroPointerGlow();
+    preloader();
+    mobileMenu();
+  });
+})();
