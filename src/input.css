@@ -2,15 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* * Style Kustom (Aesthetic) di sini
- * Contoh: Scrollbar yang lebih bagus
- */
 @layer base {
   html {
     @apply scroll-smooth;
   }
   
-  /* Scrollbar untuk browser Webkit (Chrome, Safari) */
+  /* Scrollbar Kustom (Aesthetic) */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -23,5 +20,71 @@
   }
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-gray-500 dark:bg-gray-500;
+  }
+}
+
+/* * --- TAMBAHKAN SEMUA DI BAWAH INI ---
+ */
+
+@layer components {
+  /*
+   * ======================================
+   * STYLING NAVBAR "CAKEP" (UI BARU)
+   * ======================================
+   */
+  .navbar-default {
+    @apply sticky top-0 z-50 transition-all duration-300;
+    /* * Default: Transparan di paling atas 
+     */
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .navbar-scrolled {
+    /* * Saat di-scroll: Efek "Frosted Glass" (Kaca Buram)
+     */
+    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-md;
+  }
+
+  /*
+   * ======================================
+   * STYLING NAV LINK "ACTIVE" (SCROLL-SPY)
+   * ======================================
+   */
+  .navbar-link {
+    @apply relative py-2 transition-colors duration-200 text-gray-700 dark:text-gray-300;
+  }
+  
+  /* Garis bawah penanda 'active' */
+  .navbar-link::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-0.5 bg-primary-500 scale-x-0 transition-transform duration-300 origin-center;
+  }
+
+  .navbar-link.active {
+    /* Style untuk link yang aktif (sedang dilihat) */
+    @apply text-primary-500 dark:text-primary-400 font-semibold;
+  }
+
+  /* Animasi garis bawah saat link aktif */
+  .navbar-link.active::after {
+    @apply scale-x-100;
+  }
+
+  /* * ======================================
+   * STYLING ANIMASI "REVEAL ON SCROLL"
+   * ======================================
+   */
+  .reveal-on-scroll {
+    /* * State awal: Sembunyi (transparan dan sedikit ke bawah) 
+     */
+    @apply opacity-0 translate-y-5;
+  }
+
+  .reveal-on-scroll.is-visible {
+    /* * State akhir: Muncul (menggunakan animasi dari tailwind.config.js)
+     * 'both' berarti animasi akan tetap di state 100% setelah selesai.
+     */
+    animation: fade-in-up 0.6s ease-out both;
   }
 }
