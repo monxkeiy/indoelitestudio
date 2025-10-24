@@ -1,3 +1,4 @@
+/* CONFIG: editable content for Indo Elite Studio (Elite Aurora) */
 const CONFIG = {
     // Info Umum
     studioName: "Indo Elite Studio",
@@ -14,26 +15,25 @@ const CONFIG = {
         {
             name: "HongX",
             role: "Owner",
-            imageUrl: "assets/hong.png", // Ganti dengan path foto Anda
+            imageUrl: "assets/hong.png",
             socials: [
-                // Tambahkan sosmed Owner di sini
-                { icon: "logo-instagram", url: "https://www.instagram.com/hong9x9?igsh=MWNidDk0Mjl5emNsZQ==" } // Contoh
+                { icon: "logo-instagram", url: "https://www.instagram.com/hong9x9?igsh=MWNidDk0Mjl5emNsZQ==" }
             ]
         },
         {
             name: "Monx",
             role: "Proggramer",
-            imageUrl: "assets/monx.png", // Ganti dengan path foto Anda
+            imageUrl: "assets/monx.png",
             socials: [
-                { icon: "logo-instagram", url: "https://www.instagram.com/xmonz._?igsh=MTFmMW1iOTVqMTYyNg==" } // Ganti URL
+                { icon: "logo-instagram", url: "https://www.instagram.com/xmonz._?igsh=MTFmMW1iOTVqMTYyNg==" }
             ]
         },
         {
             name: "David",
             role: "Desainer",
-            imageUrl: "assets/david.png", // Ganti dengan path foto Anda
+            imageUrl: "assets/david.png",
             socials: [
-                { icon: "logo-instagram", url: "https://www.instagram.com/vyddd_prnma?igsh=MXZnY3Z1ZTdxYjgwbA==" } // Ganti URL
+                { icon: "logo-instagram", url: "https://www.instagram.com/vyddd_prnma?igsh=MXZnY3Z1ZTdxYjgwbA==" }
             ]
         }
     ],
@@ -43,14 +43,14 @@ const CONFIG = {
         {
             title: "Mount Elite",
             description: "Project map gunung dengan fitur climbing dan sistem kustom yang lengkap.",
-            imageUrl: "assets/project-mount-elite.png", // Ganti dengan path gambar
-            gameUrl: "https://www.roblox.com/id/games/88335800030716/FREE-COIL-SUMMIT-X25-MOUNT-ELIT" // Ganti dengan link game Roblox
+            imageUrl: "assets/project-mount-elite.png",
+            gameUrl: "https://www.roblox.com/id/games/88335800030716/FREE-COIL-SUMMIT-X25-MOUNT-ELIT"
         },
         {
             title: "Goa Batu BGTT",
             description: "Map dengan desain goa yang kompleks dan menantang, fokus pada eksplorasi.",
-            imageUrl: "assets/project-goa-batu.png", // Ganti dengan path gambar
-            gameUrl: "https://www.roblox.com/share?code=fef4e95962d47446b3579d9b2c3b1e36&type=ExperienceDetails&stamp=1761282602662" // Ganti dengan link game Roblox
+            imageUrl: "assets/project-goa-batu.png",
+            gameUrl: "https://www.roblox.com/share?code=fef4e95962d47446b3579d9b2c3b1e36&type=ExperienceDetails&stamp=1761282602662"
         }
     ],
     
