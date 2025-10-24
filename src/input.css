@@ -160,3 +160,53 @@
     animation: fade-in-up 0.6s ease-out both;
   }
 }
+    /* === FIX UNTUK PRODUK / JASA / TIM INVISIBLE === */
+.cyber-card {
+  position: relative;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  padding: 1.5rem;
+  transition: transform .25s ease, box-shadow .25s ease;
+  color: white;
+  opacity: 1;
+}
+.cyber-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(91,141,255,.25);
+}
+
+.cyber-card-title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: #5b8dff;
+  margin-bottom: 0.6rem;
+}
+
+.cyber-card-price {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+  color: #7dd3fc;
+  font-size: 1.05rem;
+}
+
+.cyber-card-desc {
+  color: rgba(255,255,255,.75);
+  font-size: 0.95rem;
+  margin-top: 0.4rem;
+  line-height: 1.5;
+}
+
+.cyber-team-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 0 10px rgba(91,141,255,0.25);
+}
+    
