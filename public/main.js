@@ -1,30 +1,40 @@
 /*
- * SCRIPT PERAKIT HALAMAN (MAIN LOGIC) - V4 (CYBER-GRID THEME)
- * Fungsionalitas inti (Scroll-Spy, Reveal, etc.) tidak berubah.
- * HANYA template HTML di dalam fungsi load...() yang di-update.
+ * SCRIPT PERAKIT HALAMAN (MAIN LOGIC) - V4.1 (ENHANCED + ANTI-CRASH)
+ *
+ * UPGRADE:
+ * - Menambahkan 'try...catch' block di 'loadPageContent()'.
+ * - Jika salah satu bagian (cth: loadServices) gagal karena error di
+ * config.js, script tidak akan mati. Script akan me-log error
+ * di console dan Lanjut ke bagian berikutnya (cth: loadProjects).
+ * - Ini adalah "complex" & "bug-free" enhancement.
  */
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Cek #1: Pastikan CONFIG object ada
     if (typeof CONFIG === 'undefined') {
-        console.error('ERROR: config.js tidak ditemukan atau gagal di-load.');
+        console.error('FATAL ERROR: config.js tidak ditemukan atau gagal di-load. Script berhenti.');
         return;
     }
 
     // --- INISIALISASI SEMUA FITUR ---
-    initDarkMode();
-    initDynamicNavbar();
-    initScrollReveal();
-    initScrollSpy();
+    
+    // Setiap fungsi init dibungkus try...catch agar lebih aman
+    try { initDarkMode(); } catch (e) { console.error('Error in initDarkMode:', e); }
+    try { initDynamicNavbar(); } catch (e) { console.error('Error in initDynamicNavbar:', e); }
+    try { initScrollReveal(); } catch (e) { console.error('Error in initScrollReveal:', e); }
+    try { initScrollSpy(); } catch (e) { console.error('Error in initScrollSpy:', e); }
+    
+    // Memuat konten dari config.js
     loadPageContent();
 
-    console.log("Website Indo Elite Studio v4 (Cyber-Grid) berhasil dirakit!");
+    console.log("Website Indo Elite Studio v4.1 (Anti-Crash) berhasil dirakit!");
 });
 
 
-/**
- * (FIXED) Mengaktifkan Dark Mode Toggle
- * Logika klik sederhana. FOUC fix ada di <head>.
- */
+// ===============================================
+// --- SEMUA FUNGSI INIT (TIDAK BERUBAH) ---
+// ===============================================
+
 function initDarkMode() {
     const toggleButton = document.getElementById('darkModeToggle');
     const htmlElement = document.documentElement;
@@ -38,9 +48,6 @@ function initDarkMode() {
     });
 }
 
-/**
- * Mengubah UI Navbar (transparan -> frosted glass) saat di-scroll
- */
 function initDynamicNavbar() {
     const header = document.getElementById('main-header');
     if (!header) return;
@@ -50,9 +57,6 @@ function initDynamicNavbar() {
     }, { passive: true });
 }
 
-/**
- * Mengaktifkan animasi "Reveal on Scroll"
- */
 function initScrollReveal() {
     const revealElements = document.querySelectorAll('.reveal-on-scroll');
     if (revealElements.length === 0) return;
@@ -68,9 +72,6 @@ function initScrollReveal() {
     revealElements.forEach(el => observer.observe(el));
 }
 
-/**
- * Mengaktifkan "Scroll-Spy" untuk menyorot link navbar yang aktif
- */
 function initScrollSpy() {
     const sections = document.querySelectorAll('section[id], footer[id]');
     const navLinks = document.querySelectorAll('.navbar-link');
@@ -91,28 +92,75 @@ function initScrollSpy() {
 
 
 // ===============================================
-// --- FUNGSI PEMUATAN KONTEN (TEMPLATE DI-UPDATE) ---
+// --- FUNGSI PEMUATAN KONTEN (DI-UPGRADE) ---
 // ===============================================
 
+/**
+ * (UPGRADED) Fungsi utama untuk memanggil semua perakit konten.
+ * Setiap pemuat sekarang ada di dalam 'try...catch'.
+ * Jika 'loadServices' gagal, 'loadProjects' akan TETAP berjalan.
+ */
 function loadPageContent() {
-    loadBasicInfo();
-    loadServices();
-    loadProjects();
-    loadTeam();
-    loadFooter();
+    try {
+        loadBasicInfo();
+    } catch (e) {
+        console.error('Error saat memuat Basic Info:', e);
+    }
+    
+    try {
+        loadServices();
+    } catch (e) {
+        console.error('Error saat memuat Services (Cek CONFIG.services di config.js):', e);
+    }
+    
+    try {
+        loadProjects();
+    } catch (e) {
+        console.error('Error saat memuat Projects (Cek CONFIG.projects di config.js):', e);
+    }
+    
+    try {
+        loadTeam();
+    } catch (e) {
+        console.error('Error saat memuat Team (Cek CONFIG.team di config.js):', e);
+    }
+    
+    try {
+        loadFooter();
+    } catch (e) {
+        console.error('Error saat memuat Footer (Cek CONFIG.socials di config.js):', e);
+    }
 }
+
+// --- FUNGSI-FUNGSI HELPER (Template tidak berubah dari V4) ---
 
 function loadBasicInfo() {
+    // Cek #2: Pastikan elemen HTML ada
+    const brand = document.getElementById('nav-brand');
+    const title = document.getElementById('hero-title');
+    
+    if (!brand || !title) {
+        console.warn("Peringatan: Elemen 'nav-brand' atau 'hero-title' tidak ditemukan di index.html.");
+        return;
+    }
+    
     document.title = CONFIG.studioName + " - Jasa Map Roblox";
-    document.getElementById('nav-brand').textContent = CONFIG.studioName;
-    document.getElementById('hero-title').textContent = CONFIG.studioName;
+    brand.textContent = CONFIG.studioName;
+    title.textContent = CONFIG.studioName;
 }
 
-// Memuat Jasa & Harga (TEMPLATE DI-UPDATE)
 function loadServices() {
     const container = document.getElementById('jasa-container');
     const { services } = CONFIG;
-    if (!container || !services) return;
+    
+    // Cek #3: Pastikan kontainer & data config ada
+    if (!container) {
+        console.warn("Peringatan: Elemen '#jasa-container' tidak ditemukan di index.html. Bagian Jasa tidak akan di-load.");
+        return;
+    }
+    if (!services || !services.packages || !services.features) {
+        throw new Error("'services', 'services.packages', atau 'services.features' tidak ditemukan di config.js.");
+    }
     
     let html = `
         <div class="text-center mb-16">
@@ -152,11 +200,17 @@ function loadServices() {
     container.innerHTML = html;
 }
 
-// Memuat Grid Proyek (TEMPLATE DI-UPDATE)
 function loadProjects() {
     const grid = document.getElementById('project-grid');
     const { projects } = CONFIG;
-    if (!grid || !projects) return;
+    
+    if (!grid) {
+        console.warn("Peringatan: Elemen '#project-grid' tidak ditemukan di index.html. Bagian Project tidak akan di-load.");
+        return;
+    }
+    if (!projects) {
+        throw new Error("'projects' tidak ditemukan di config.js.");
+    }
     
     grid.innerHTML = projects.map(project => `
         <div class="cyber-card group !p-0 overflow-hidden">
@@ -173,11 +227,17 @@ function loadProjects() {
     `).join('');
 }
 
-// Memuat Grid Tim (TEMPLATE DI-UPDATE)
 function loadTeam() {
     const grid = document.getElementById('team-grid');
     const { team } = CONFIG;
-    if (!grid || !team) return;
+    
+    if (!grid) {
+        console.warn("Peringatan: Elemen '#team-grid' tidak ditemukan di index.html. Bagian Tim tidak akan di-load.");
+        return;
+    }
+    if (!team) {
+        throw new Error("'team' tidak ditemukan di config.js.");
+    }
     
     grid.innerHTML = team.map(member => `
         <div class="cyber-card text-center">
@@ -196,11 +256,17 @@ function loadTeam() {
     `).join('');
 }
 
-// Memuat Footer (TEMPLATE DI-UPDATE)
 function loadFooter() {
     const container = document.getElementById('footer-container');
     const { socials, studioName } = CONFIG;
-    if (!container || !socials || !studioName) return;
+    
+    if (!container) {
+        console.warn("Peringatan: Elemen '#footer-container' tidak ditemukan di index.html. Bagian Footer tidak akan di-load.");
+        return;
+    }
+    if (!socials || !studioName) {
+        throw new Error("'socials' atau 'studioName' tidak ditemukan di config.js.");
+    }
     
     container.innerHTML = `
         <h3 class="text-3xl font-bold mb-6 text-neon-teal">Hubungi Kami</h3>
