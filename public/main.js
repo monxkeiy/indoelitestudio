@@ -1,24 +1,23 @@
 /*
- * SCRIPT PERAKIT HALAMAN (MAIN LOGIC) - V4.1 (ENHANCED + ANTI-CRASH)
- *
- * UPGRADE:
- * - Menambahkan 'try...catch' block di 'loadPageContent()'.
- * - Jika salah satu bagian (cth: loadServices) gagal karena error di
- * config.js, script tidak akan mati. Script akan me-log error
- * di console dan Lanjut ke bagian berikutnya (cth: loadProjects).
- * - Ini adalah "complex" & "bug-free" enhancement.
+ * SCRIPT PERAKIT HALAMAN (MAIN LOGIC) - V4.2 (FORCE DEBUG)
+ * - Menambahkan alert() di atas untuk memastikan Vercel
+ * sudah men-deploy file baru ini.
+ * - Tetap memiliki "Anti-Crash" try...catch.
  */
+
+// 1. DEBUG ALERT: Jika Anda melihat pop-up ini, file ini SUDAH BENAR.
+alert("MAIN.JS V4.2 RUNNING! Tekan OK.");
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // Cek #1: Pastikan CONFIG object ada
     if (typeof CONFIG === 'undefined') {
+        alert("FATAL ERROR: config.js tidak ditemukan atau gagal di-load. Script berhenti.");
         console.error('FATAL ERROR: config.js tidak ditemukan atau gagal di-load. Script berhenti.');
         return;
     }
 
     // --- INISIALISASI SEMUA FITUR ---
-    
-    // Setiap fungsi init dibungkus try...catch agar lebih aman
     try { initDarkMode(); } catch (e) { console.error('Error in initDarkMode:', e); }
     try { initDynamicNavbar(); } catch (e) { console.error('Error in initDynamicNavbar:', e); }
     try { initScrollReveal(); } catch (e) { console.error('Error in initScrollReveal:', e); }
@@ -27,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Memuat konten dari config.js
     loadPageContent();
 
-    console.log("Website Indo Elite Studio v4.1 (Anti-Crash) berhasil dirakit!");
+    console.log("Website Indo Elite Studio v4.2 (Anti-Crash) berhasil dirakit!");
 });
 
 
@@ -92,14 +91,9 @@ function initScrollSpy() {
 
 
 // ===============================================
-// --- FUNGSI PEMUATAN KONTEN (DI-UPGRADE) ---
+// --- FUNGSI PEMUATAN KONTEN (ANTI-CRASH) ---
 // ===============================================
 
-/**
- * (UPGRADED) Fungsi utama untuk memanggil semua perakit konten.
- * Setiap pemuat sekarang ada di dalam 'try...catch'.
- * Jika 'loadServices' gagal, 'loadProjects' akan TETAP berjalan.
- */
 function loadPageContent() {
     try {
         loadBasicInfo();
@@ -135,12 +129,11 @@ function loadPageContent() {
 // --- FUNGSI-FUNGSI HELPER (Template tidak berubah dari V4) ---
 
 function loadBasicInfo() {
-    // Cek #2: Pastikan elemen HTML ada
     const brand = document.getElementById('nav-brand');
     const title = document.getElementById('hero-title');
     
     if (!brand || !title) {
-        console.warn("Peringatan: Elemen 'nav-brand' atau 'hero-title' tidak ditemukan di index.html.");
+        console.warn("Peringatan: Elemen 'nav-brand' atau 'hero-title' tidak ditemukan.");
         return;
     }
     
@@ -153,9 +146,8 @@ function loadServices() {
     const container = document.getElementById('jasa-container');
     const { services } = CONFIG;
     
-    // Cek #3: Pastikan kontainer & data config ada
     if (!container) {
-        console.warn("Peringatan: Elemen '#jasa-container' tidak ditemukan di index.html. Bagian Jasa tidak akan di-load.");
+        console.warn("Peringatan: Elemen '#jasa-container' tidak ditemukan.");
         return;
     }
     if (!services || !services.packages || !services.features) {
@@ -205,7 +197,7 @@ function loadProjects() {
     const { projects } = CONFIG;
     
     if (!grid) {
-        console.warn("Peringatan: Elemen '#project-grid' tidak ditemukan di index.html. Bagian Project tidak akan di-load.");
+        console.warn("Peringatan: Elemen '#project-grid' tidak ditemukan.");
         return;
     }
     if (!projects) {
@@ -232,7 +224,7 @@ function loadTeam() {
     const { team } = CONFIG;
     
     if (!grid) {
-        console.warn("Peringatan: Elemen '#team-grid' tidak ditemukan di index.html. Bagian Tim tidak akan di-load.");
+        console.warn("Peringatan: Elemen '#team-grid' tidak ditemukan.");
         return;
     }
     if (!team) {
@@ -261,7 +253,7 @@ function loadFooter() {
     const { socials, studioName } = CONFIG;
     
     if (!container) {
-        console.warn("Peringatan: Elemen '#footer-container' tidak ditemukan di index.html. Bagian Footer tidak akan di-load.");
+        console.warn("Peringatan: Elemen '#footer-container' tidak ditemukan.");
         return;
     }
     if (!socials || !studioName) {
