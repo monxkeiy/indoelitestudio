@@ -1,14 +1,16 @@
 {
-  "name": "indo-elite-studio-website",
-  "version": "1.0.0",
-  "description": "Website Portfolio Indo Elite Studio",
+  "name": "indo-elite-studio-premium",
+  "version": "2.0.0",
+  "private": true,
   "scripts": {
-    "build": "tailwindcss -i ./src/input.css -o ./public/style.css",
-    "watch": "tailwindcss -i ./src/input.css -o ./public/style.css --watch"
+    "dev": "npx serve public -l 5173",
+    "build": "postcss src/input.css -o public/style.css",
+    "watch": "postcss src/input.css -o public/style.css --watch"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3"
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^3.4.13"
   }
 }
