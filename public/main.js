@@ -1,22 +1,23 @@
 /*
- * SCRIPT PERAKIT HALAMAN (MAIN LOGIC) - V4.3 (HEAVY DEBUG)
- * - Menambahkan alert baru untuk memastikan loadPageContent berjalan.
+ * SCRIPT PERAKIT HALAMAN (MAIN LOGIC) - V4.4 (Anti-Race Condition)
+ *
+ * UPGRADE:
+ * - Menghapus semua 'alert()'
+ * - Menghapus wrapper 'document.addEventListener('DOMContentLoaded', ...)'
+ * - Script ini sekarang di-load di akhir <body> (lihat index.html)
+ * - Ini menjamin semua elemen HTML sudah ada SEBELUM script ini berjalan.
+ * - Ini adalah solusi paling 'bug-free'.
  */
 
-// Alert #1
-alert("MAIN.JS V4.3 RUNNING! Tekan OK.");
+// Cek #1: Pastikan CONFIG object ada
+if (typeof CONFIG === 'undefined') {
+    console.error('FATAL ERROR: config.js tidak ditemukan atau gagal di-load. Script berhenti.');
+    // Berhenti di sini jika config.js gagal di-load
+} else {
 
-document.addEventListener('DOMContentLoaded', () => {
+    // Jika config.js ADA, jalankan semuanya
+    console.log("CONFIG ditemukan. Memulai perakitan halaman...");
     
-    if (typeof CONFIG === 'undefined') {
-        alert("FATAL ERROR: config.js tidak ditemukan. Script berhenti.");
-        console.error('FATAL ERROR: config.js tidak ditemukan atau gagal di-load. Script berhenti.');
-        return;
-    }
-
-    // Alert #2: Jika Anda melihat ini, config.js DITEMUKAN.
-    alert("DOM Loaded. CONFIG ditemukan. Memulai loadPageContent...");
-
     // --- INISIALISASI SEMUA FITUR ---
     try { initDarkMode(); } catch (e) { console.error('Error in initDarkMode:', e); }
     try { initDynamicNavbar(); } catch (e) { console.error('Error in initDynamicNavbar:', e); }
@@ -26,15 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Memuat konten dari config.js
     loadPageContent();
 
-    console.log("Website Indo Elite Studio v4.3 (Heavy Debug) berhasil dirakit!");
-});
+    console.log("Website Indo Elite Studio v4.4 (Anti-Race Condition) berhasil dirakit!");
+}
 
-// ... (Semua fungsi init...() tetap sama persis seperti V4.2) ...
+
+// ===============================================
+// --- SEMUA FUNGSI INIT (TIDAK BERUBAH) ---
+// ===============================================
 
 function initDarkMode() {
     const toggleButton = document.getElementById('darkModeToggle');
     const htmlElement = document.documentElement;
     if (!toggleButton) return;
+
     toggleButton.addEventListener('click', () => {
         const isDark = htmlElement.classList.contains('dark');
         const newTheme = isDark ? 'light' : 'dark';
@@ -42,6 +47,7 @@ function initDarkMode() {
         localStorage.setItem('theme', newTheme);
     });
 }
+
 function initDynamicNavbar() {
     const header = document.getElementById('main-header');
     if (!header) return;
@@ -50,6 +56,7 @@ function initDynamicNavbar() {
         header.classList.toggle('navbar-scrolled', window.scrollY > scrollThreshold);
     }, { passive: true });
 }
+
 function initScrollReveal() {
     const revealElements = document.querySelectorAll('.reveal-on-scroll');
     if (revealElements.length === 0) return;
@@ -64,6 +71,7 @@ function initScrollReveal() {
     }, observerOptions);
     revealElements.forEach(el => observer.observe(el));
 }
+
 function initScrollSpy() {
     const sections = document.querySelectorAll('section[id], footer[id]');
     const navLinks = document.querySelectorAll('.navbar-link');
@@ -82,48 +90,45 @@ function initScrollSpy() {
     sections.forEach(section => observer.observe(section));
 }
 
+
 // ===============================================
 // --- FUNGSI PEMUATAN KONTEN (ANTI-CRASH) ---
 // ===============================================
 
 function loadPageContent() {
-    // Alert #3: Membuktikan fungsi ini berjalan.
-    alert("loadPageContent() DIMULAI. Akan memuat Basic Info...");
+    console.log("Memulai loadPageContent()...");
     
     try {
         loadBasicInfo();
     } catch (e) {
         console.error('Error saat memuat Basic Info:', e);
-        alert('Error saat memuat Basic Info: ' + e.message); // Alert jika error
     }
     
     try {
         loadServices();
     } catch (e) {
         console.error('Error saat memuat Services:', e);
-        alert('Error saat memuat Services: ' + e.message); // Alert jika error
     }
     
     try {
         loadProjects();
     } catch (e) {
         console.error('Error saat memuat Projects:', e);
-        alert('Error saat memuat Projects: ' + e.message); // Alert jika error
     }
     
     try {
         loadTeam();
     } catch (e) {
         console.error('Error saat memuat Team:', e);
-        alert('Error saat memuat Team: ' + e.message); // Alert jika error
     }
     
     try {
         loadFooter();
     } catch (e) {
         console.error('Error saat memuat Footer:', e);
-        alert('Error saat memuat Footer: ' + e.message); // Alert jika error
     }
+    
+    console.log("loadPageContent() Selesai.");
 }
 
 // --- FUNGSI-FUNGSI HELPER (Template tidak berubah dari V4) ---
@@ -131,21 +136,29 @@ function loadPageContent() {
 function loadBasicInfo() {
     const brand = document.getElementById('nav-brand');
     const title = document.getElementById('hero-title');
-    if (!brand || !title) return;
+    if (!brand || !title) {
+        console.warn("Peringatan: Elemen 'nav-brand' atau 'hero-title' tidak ditemukan.");
+        return;
+    }
     
     document.title = CONFIG.studioName + " - Jasa Map Roblox";
     brand.textContent = CONFIG.studioName;
     title.textContent = CONFIG.studioName;
+    console.log("loadBasicInfo() BERHASIL. Judul di-set ke: " + CONFIG.studioName);
 }
 
 function loadServices() {
     const container = document.getElementById('jasa-container');
     const { services } = CONFIG;
-    if (!container) return;
+    if (!container) {
+        console.warn("Peringatan: Elemen '#jasa-container' tidak ditemukan.");
+        return;
+    }
     if (!services || !services.packages || !services.features) {
         throw new Error("'services', 'packages', atau 'features' tidak ada di config.");
     }
     
+    // ... (HTML template sama persis) ...
     let html = `
         <div class="text-center mb-16">
             <h2 class="text-4xl font-bold mb-3 text-neon-teal">${services.title}</h2>
@@ -182,14 +195,19 @@ function loadServices() {
         </div>
     `;
     container.innerHTML = html;
+    console.log("loadServices() BERHASIL.");
 }
 
 function loadProjects() {
     const grid = document.getElementById('project-grid');
     const { projects } = CONFIG;
-    if (!grid) return;
+    if (!grid) {
+        console.warn("Peringatan: Elemen '#project-grid' tidak ditemukan.");
+        return;
+    }
     if (!projects) throw new Error("'projects' tidak ada di config.");
     
+    // ... (HTML template sama persis) ...
     grid.innerHTML = projects.map(project => `
         <div class="cyber-card group !p-0 overflow-hidden">
             <img src="${project.imageUrl}" alt="${project.title}" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
@@ -203,14 +221,19 @@ function loadProjects() {
             </div>
         </div>
     `).join('');
+    console.log("loadProjects() BERHASIL.");
 }
 
 function loadTeam() {
     const grid = document.getElementById('team-grid');
     const { team } = CONFIG;
-    if (!grid) return;
+    if (!grid) {
+        console.warn("Peringatan: Elemen '#team-grid' tidak ditemukan.");
+        return;
+    }
     if (!team) throw new Error("'team' tidak ada di config.");
     
+    // ... (HTML template sama persis) ...
     grid.innerHTML = team.map(member => `
         <div class="cyber-card text-center">
             <img src="${member.imageUrl}" alt="${member.name}" class="cyber-team-img">
@@ -226,14 +249,19 @@ function loadTeam() {
             </div>
         </div>
     `).join('');
+    console.log("loadTeam() BERHASIL.");
 }
 
 function loadFooter() {
     const container = document.getElementById('footer-container');
     const { socials, studioName } = CONFIG;
-    if (!container) return;
+    if (!container) {
+        console.warn("Peringatan: Elemen '#footer-container' tidak ditemukan.");
+        return;
+    }
     if (!socials || !studioName) throw new Error("'socials' atau 'studioName' tidak ada di config.");
     
+    // ... (HTML template sama persis) ...
     container.innerHTML = `
         <h3 class="text-3xl font-bold mb-6 text-neon-teal">Hubungi Kami</h3>
         <p class="text-lg mb-8 text-dark-text">Siap memulai project Anda? Hubungi kami melalui sosial media.</p>
@@ -249,4 +277,5 @@ function loadFooter() {
             <p class="text-dark-text font-mono">&copy; ${new Date().getFullYear()} ${studioName}. All rights reserved.</p>
         </div>
     `;
+    console.log("loadFooter() BERHASIL.");
 }
