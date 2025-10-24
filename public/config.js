@@ -43,13 +43,13 @@ const CONFIG = {
         {
             title: "Mount Elite",
             description: "Project map gunung dengan fitur climbing dan sistem kustom yang lengkap.",
-            imageUrl: "assets/project-mount-elite.png", // Ganti dengan path gambar
+            imageUrl: "assets/elite.png", // Ganti dengan path gambar
             gameUrl: "https://www.roblox.com/id/games/88335800030716/FREE-COIL-SUMMIT-X25-MOUNT-ELIT" // Ganti dengan link game Roblox
         },
         {
             title: "Goa Batu BGTT",
             description: "Map dengan desain goa yang kompleks dan menantang, fokus pada eksplorasi.",
-            imageUrl: "assets/project-goa-batu.png", // Ganti dengan path gambar
+            imageUrl: "assets/goa.png", // Ganti dengan path gambar
             gameUrl: "https://www.roblox.com/share?code=fef4e95962d47446b3579d9b2c3b1e36&type=ExperienceDetails&stamp=1761282602662" // Ganti dengan link game Roblox
         }
     ],
