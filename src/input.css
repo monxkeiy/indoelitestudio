@@ -1,3 +1,6 @@
+/* Impor font baru (Poppins + Roboto Mono) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Roboto+Mono:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,84 +10,153 @@
     @apply scroll-smooth;
   }
   
-  /* Scrollbar Kustom (Aesthetic) */
+  body {
+    /* Latar belakang ungu gelap + pola grid */
+    @apply bg-dark-bg text-light-text font-sans;
+    background-image: theme('backgroundImage.grid-pattern');
+    background-size: 30px 30px; /* Ukuran grid */
+    background-position: 0 0;
+  }
+  
+  /* Scrollbar Kustom (Cyber-Grid) */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-gray-800;
+    @apply bg-dark-bg;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-400 dark:bg-gray-600 rounded-full;
+    @apply bg-neon-teal rounded-full;
+    box-shadow: 0 0 5px #00F4E0; /* Efek glow */
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-500 dark:bg-gray-500;
+    @apply bg-neon-pink;
+    box-shadow: 0 0 5px #FF00E6;
   }
 }
-
-/* * --- TAMBAHKAN SEMUA DI BAWAH INI ---
- */
 
 @layer components {
   /*
    * ======================================
-   * STYLING NAVBAR "CAKEP" (UI BARU)
+   * NAVBAR "CYBER-GRID"
    * ======================================
    */
   .navbar-default {
     @apply sticky top-0 z-50 transition-all duration-300;
-    /* * Default: Transparan di paling atas 
-     */
     background-color: transparent;
-    box-shadow: none;
   }
-
   .navbar-scrolled {
-    /* * Saat di-scroll: Efek "Frosted Glass" (Kaca Buram)
-     */
-    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-md;
+    @apply bg-dark-bg/80 backdrop-blur-lg; /* Frosted glass di atas ungu */
+    border-bottom: 1px solid theme('colors.border-color');
   }
 
   /*
    * ======================================
-   * STYLING NAV LINK "ACTIVE" (SCROLL-SPY)
+   * NAV LINK "ACTIVE" (NEON)
    * ======================================
    */
   .navbar-link {
-    @apply relative py-2 transition-colors duration-200 text-gray-700 dark:text-gray-300;
+    @apply relative py-2 transition-colors duration-200 text-dark-text hover:text-neon-pink;
+    font-family: theme('fontFamily.mono'); /* Font mono untuk nav */
+    @apply font-semibold uppercase tracking-wider text-sm;
   }
   
-  /* Garis bawah penanda 'active' */
   .navbar-link::after {
-    content: '';
-    @apply absolute bottom-0 left-0 w-full h-0.5 bg-primary-500 scale-x-0 transition-transform duration-300 origin-center;
+    @apply hidden; /* Hapus garis bawah lama */
   }
 
+  /* Link aktif akan 'menyala' teal */
   .navbar-link.active {
-    /* Style untuk link yang aktif (sedang dilihat) */
-    @apply text-primary-500 dark:text-primary-400 font-semibold;
+    @apply text-neon-teal;
+    text-shadow: 0 0 8px #00F4E0;
   }
 
-  /* Animasi garis bawah saat link aktif */
-  .navbar-link.active::after {
-    @apply scale-x-100;
+  /*
+   * ======================================
+   * KARTU & TOMBOL "NEON"
+   * ======================================
+   */
+   
+  /* Tombol CTA Utama (Hero) */
+  .cta-button {
+    @apply bg-neon-teal text-dark-bg font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 transform;
+    box-shadow: 0 0 15px rgba(0, 244, 224, 0.7);
+  }
+  .cta-button:hover {
+    @apply scale-105;
+    box-shadow: 0 0 30px rgba(0, 244, 224, 1);
   }
 
-  /* * ======================================
-   * STYLING ANIMASI "REVEAL ON SCROLL"
+  /* Tombol Dark Mode (FIXED) */
+  .dark-mode-toggle-button {
+    @apply w-10 h-10 rounded-full flex items-center justify-center 
+           text-neon-teal hover:bg-border-color
+           transition-colors;
+    border: 1px solid theme('colors.border-color');
+  }
+  
+  /* Kelas Tombol Dark Mode saat 'Light Mode' (jika Anda ingin toggle) */
+  .light .dark-mode-toggle-button {
+     @apply text-neon-pink border-neon-pink hover:bg-neon-pink/10;
+  }
+
+  /* Kartu (Jasa, Project, Tim) */
+  .cyber-card {
+    @apply bg-card-bg backdrop-blur-sm p-8 rounded-xl shadow-lg relative overflow-hidden;
+    border: 1px solid theme('colors.border-color');
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .cyber-card:hover {
+    @apply transform -translate-y-1;
+    box-shadow: 0 0 20px rgba(0, 244, 224, 0.3);
+  }
+  
+  /* Efek 'glow' di sudut kartu (keren) */
+  .cyber-card::before {
+    content: '';
+    @apply absolute -top-1/2 -left-1/2 w-full h-full;
+    background: radial-gradient(circle, rgba(0, 244, 224, 0.2) 0%, rgba(0, 244, 224, 0) 60%);
+    animation: glow 4s ease-in-out infinite alternate;
+  }
+  
+  /* Judul di dalam kartu */
+  .cyber-card-title {
+    @apply text-2xl font-bold mb-4 text-neon-teal;
+    text-shadow: 0 0 5px rgba(0, 244, 224, 0.7);
+  }
+  
+  /* Harga di dalam kartu (font mono + neon pink) */
+  .cyber-card-price {
+    @apply text-lg font-bold font-mono text-neon-pink;
+    text-shadow: 0 0 5px rgba(255, 0, 230, 0.7);
+  }
+  
+  /* Deskripsi di dalam kartu */
+  .cyber-card-desc {
+    @apply text-dark-text;
+  }
+  
+  /* Foto Tim (Cyber) */
+  .cyber-team-img {
+    @apply w-32 h-32 rounded-full mx-auto mb-4 border-4 border-neon-teal;
+    box-shadow: 0 0 15px rgba(0, 244, 224, 0.7);
+    transition: all 0.3s ease;
+  }
+  .cyber-card:hover .cyber-team-img {
+    @apply border-neon-pink;
+    box-shadow: 0 0 20px rgba(255, 0, 230, 0.7);
+  }
+
+  /*
+   * ======================================
+   * ANIMASI "REVEAL ON SCROLL"
    * ======================================
    */
   .reveal-on-scroll {
-    /* * State awal: Sembunyi (transparan dan sedikit ke bawah) 
-     */
     @apply opacity-0 translate-y-5;
   }
-
   .reveal-on-scroll.is-visible {
-    /* * State akhir: Muncul (menggunakan animasi dari tailwind.config.js)
-     * 'both' berarti animasi akan tetap di state 100% setelah selesai.
-     */
     animation: fade-in-up 0.6s ease-out both;
   }
 }
