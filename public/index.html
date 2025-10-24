@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html lang="id" class="dark"> <head>
+<html lang="id" class="dark">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Indo Elite Studio</title> 
-    
     <link href="style.css" rel="stylesheet">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -19,15 +17,15 @@
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
 
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-sm">
+    <header id="main-header" class="navbar-default">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#" id="nav-brand" class="text-2xl font-bold text-primary-600 dark:text-primary-400"></a>
             
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="#jasa" class="hover:text-primary-500">Jasa</a>
-                <a href="#project" class="hover:text-primary-500">Project</a>
-                <a href="#tim" class="hover:text-primary-500">Tim</a>
-                <a href="#kontak" class="hover:text-primary-500">Kontak</a>
+            <div id="nav-links" class="hidden md:flex items-center space-x-8">
+                <a href="#jasa" class="navbar-link" data-target="#jasa">Jasa</a>
+                <a href="#project" class="navbar-link" data-target="#project">Project</a>
+                <a href="#tim" class="navbar-link" data-target="#tim">Tim</a>
+                <a href="#kontak" class="navbar-link" data-target="#kontak">Kontak</a>
             </div>
             
             <button id="darkModeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
@@ -40,8 +38,7 @@
     <main>
         
         <section id="home" class="container mx-auto px-6 py-32 text-center">
-            <h1 id="hero-title" class="text-5xl md:text-7xl font-extrabold mb-4">
-                </h1>
+            <h1 id="hero-title" class="text-5xl md:text-7xl font-extrabold mb-4"></h1>
             <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10">
                 Solusi Profesional untuk Jasa Pembuatan Map Roblox.
             </p>
@@ -50,11 +47,11 @@
             </a>
         </section>
 
-        <section id="jasa" class="py-24 bg-white dark:bg-gray-800">
+        <section id="jasa" class="py-24 bg-white dark:bg-gray-800 reveal-on-scroll">
             <div id="jasa-container" class="container mx-auto px-6"></div>
         </section>
 
-        <section id="project" class="py-24">
+        <section id="project" class="py-24 reveal-on-scroll">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
                     <h2 class="text-4xl font-bold mb-3">Project Kami</h2>
@@ -64,7 +61,7 @@
             </div>
         </section>
 
-        <section id="tim" class="py-24 bg-white dark:bg-gray-800">
+        <section id="tim" class="py-24 bg-white dark:bg-gray-800 reveal-on-scroll">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
                     <h2 class="text-4xl font-bold mb-3">Tim Indo Elite Studio</h2>
@@ -76,7 +73,7 @@
 
     </main>
 
-    <footer id="kontak" class="bg-gray-900 dark:bg-black text-gray-300 py-16">
+    <footer id="kontak" class="bg-gray-900 dark:bg-black text-gray-300 py-16 reveal-on-scroll">
         <div id="footer-container" class="container mx-auto px-6 text-center"></div>
     </footer>
 
