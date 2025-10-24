@@ -1,194 +1,102 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Indo Elite Studio — Elite Aurora</title>
-  <meta name="description" content="Indo Elite Studio: Roblox mountain & obby community. Elite Aurora edition."/>
-  <link rel="icon" href="assets/logo.png"/>
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Tailwind (CDN, no build needed) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { display: ['Sora','ui-sans-serif','system-ui'], sans: ['Inter','ui-sans-serif','system-ui'] },
-          colors: {
-            ink:'#0a0f1c',
-            brand: { 500:'#5b8dff' },
-            aurora1:'#6b8bff', aurora2:'#a06bff', aurora3:'#47e4a1'
-          },
-          boxShadow: {
-            glow:'0 10px 40px rgba(91,141,255,0.35)',
-            neon:'0 0 24px rgba(91,141,255,0.6)'
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script>
+      (function() {
+        try {
+          var theme = localStorage.getItem('theme');
+          var html = document.documentElement;
+          // Di tema Cyber-Grid, kita asumsikan 'dark' adalah default
+          // Jadi kita HANYA hapus 'dark' jika user memilih 'light'
+          if (theme === 'light') {
+            html.classList.remove('dark');
+          } else {
+            html.classList.add('dark');
           }
-        }
-      }
-    }
-  </script>
-
-  <link rel="stylesheet" href="style.css"/>
+        } catch (e) { /* Abaikan error */ }
+      })();
+    </script>
+    
+    <title>Indo Elite Studio</title> 
+    
+    <link href="style.css" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <script src="config.js" defer></script>
+    <script src="main.js" defer></script>
 </head>
-<body class="min-h-screen bg-ink text-white antialiased selection:bg-brand-500/30 selection:text-white">
-  <!-- Animated Aurora Background -->
-  <div class="aurora-bg" aria-hidden="true"></div>
 
-  <!-- Preloader -->
-  <div id="preloader" class="fixed inset-0 z-[60] grid place-items-center bg-ink">
-    <div class="flex items-center gap-4">
-      <img src="assets/logo.png" class="w-12 h-12 animate-pulse drop-shadow-[0_0_22px_rgba(91,141,255,.65)]" alt="logo"/>
-      <div class="w-40 h-1.5 bg-white/10 overflow-hidden rounded-full">
-        <div class="h-full w-1/3 bg-brand-500 shimmer"></div>
-      </div>
-    </div>
-  </div>
+<body>
 
-  <!-- NAVBAR -->
-  <header class="sticky top-0 z-50 backdrop-blur-md bg-black/30 border-b border-white/10">
-    <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3">
-        <img src="assets/logo.png" class="w-9 h-9 rounded-lg ring-1 ring-white/10" alt="logo"/>
-        <div>
-          <div id="brand" class="font-display font-bold leading-4">Indo Elite Studio</div>
-          <div class="text-xs text-white/60 -mt-0.5">Roblox Community</div>
-        </div>
-      </a>
-      <div class="hidden md:flex items-center gap-8 text-sm">
-        <a href="#projects" class="nav-link">Projects</a>
-        <a href="#team" class="nav-link">Team</a>
-        <a href="#services" class="nav-link">Services</a>
-        <a href="#contact" class="nav-link">Contact</a>
-      </div>
-      <a id="nav-discord" class="hidden md:inline-flex px-4 py-2 rounded-lg bg-white/5 ring-1 ring-white/10 hover:bg-white/10">Discord</a>
-      <button id="mobile-menu" class="md:hidden inline-flex items-center gap-2 px-3 py-2 rounded-lg ring-1 ring-white/20 bg-white/5">Menu</button>
-    </nav>
-  </header>
-
-  <!-- Mobile Drawer -->
-  <div id="mobile-drawer" class="fixed inset-0 z-40 hidden">
-    <div class="drawer-backdrop"></div>
-    <div class="drawer-panel">
-      <div class="flex items-center justify-between mb-6">
-        <div class="font-display font-bold">Menu</div>
-        <button id="drawer-close" class="px-3 py-2 rounded-lg bg-white/5 ring-1 ring-white/10 hover:bg-white/10">Close</button>
-      </div>
-      <nav class="grid gap-3 text-sm">
-        <a href="#projects" class="drawer-link">Projects</a>
-        <a href="#team" class="drawer-link">Team</a>
-        <a href="#services" class="drawer-link">Services</a>
-        <a href="#contact" class="drawer-link">Contact</a>
-        <a id="drawer-discord" class="drawer-cta mt-2">Discord</a>
-      </nav>
-    </div>
-  </div>
-
-  <main>
-    <!-- HERO -->
-    <section class="relative overflow-hidden">
-      <div class="container mx-auto px-6 py-24 md:py-28 lg:py-32 grid md:grid-cols-2 gap-12 items-center">
-        <div class="space-y-6">
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full ring-1 ring-white/15 bg-white/5 text-white/80 reveal">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-neon"></span>
-            Elite Aurora Edition
-          </div>
-          <h1 class="font-display font-extrabold text-4xl md:text-5xl lg:text-6xl leading-tight reveal [animation-delay:.05s]" id="hero-title">
-            Bangun & Taklukkan Gunung <span class="text-brand-500">Bersama</span>
-          </h1>
-          <p class="text-white/70 text-lg md:text-xl max-w-xl reveal [animation-delay:.1s]" id="hero-desc">
-            Komunitas & studio pengembang Roblox untuk map gunung & obby premium — dengan event, speedrun board, dan fitur carry yang rapi.
-          </p>
-          <div class="flex flex-wrap gap-4 pt-2 reveal [animation-delay:.15s]">
-            <a href="#projects" class="btn-primary">Lihat Projects</a>
-            <a id="cta-discord" class="btn-ghost">Gabung Discord</a>
-          </div>
-        </div>
-        <div class="relative">
-          <div class="hero-card group reveal">
-            <img src="assets/logo.png" class="w-24 h-24 rounded-xl ring-1 ring-white/10 shadow-neon" alt="logo" loading="lazy"/>
-            <div class="space-y-2">
-              <h3 class="font-display text-2xl font-bold" id="hero-brand">Indo Elite Studio</h3>
-              <p class="text-white/70">Premium Roblox mountain maps, smart checkpoint systems, and events.</p>
+    <header id="main-header" class="navbar-default">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" id="nav-brand" class="text-2xl font-bold text-neon-teal hover:text-neon-pink transition-colors"></a>
+            
+            <div id="nav-links" class="hidden md:flex items-center space-x-8">
+                <a href="#jasa" class="navbar-link" data-target="#jasa">Jasa</a>
+                <a href="#project" class="navbar-link" data-target="#project">Project</a>
+                <a href="#tim" class="navbar-link" data-target="#tim">Tim</a>
+                <a href="#kontak" class="navbar-link" data-target="#kontak">Kontak</a>
             </div>
-            <div class="grid grid-cols-3 gap-3 pt-4">
-              <div class="stat">
-                <div class="stat-value" id="stat-projects">--</div>
-                <div class="stat-label">Projects</div>
-              </div>
-              <div class="stat">
-                <div class="stat-value" id="stat-services">--</div>
-                <div class="stat-label">Services</div>
-              </div>
-              <div class="stat">
-                <div class="stat-value" id="stat-team">--</div>
-                <div class="stat-label">Team</div>
-              </div>
+            
+            <button id="darkModeToggle" class="dark-mode-toggle-button">
+                <ion-icon name="moon-outline" class="text-2xl hidden dark:inline"></ion-icon>
+                <ion-icon name="sunny-outline" class="text-2xl inline dark:hidden"></ion-icon>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        
+        <section id="home" class="container mx-auto px-6 py-32 text-center">
+            <h1 id="hero-title" class="text-5xl md:text-7xl font-extrabold mb-4 text-neon-teal" style="text-shadow: 0 0 10px rgba(0, 244, 224, 0.7);">
+                </h1>
+            <p class="text-xl md:text-2xl text-dark-text mb-10">
+                Solusi Profesional untuk Jasa Pembuatan Map Roblox.
+            </p>
+            <a href="#jasa" class="cta-button">
+                Lihat Daftar Harga
+            </a>
+        </section>
+
+        <section id="jasa" class="py-24 reveal-on-scroll">
+            <div id="jasa-container" class="container mx-auto px-6"></div>
+        </section>
+
+        <section id="project" class="py-24 reveal-on-scroll">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-3 text-neon-teal">Project Kami</h2>
+                    <p class="text-lg text-dark-text">Beberapa map yang telah kami kerjakan.</p>
+                </div>
+                <div id="project-grid" class="grid md:grid-cols-2 gap-10"></div>
             </div>
-          </div>
-          <div class="absolute -right-6 -bottom-6 w-40 h-40 rounded-full bg-brand-500/20 blur-3xl animate-float"></div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- PROJECTS -->
-    <section id="projects" class="py-20 md:py-28 border-t border-white/10">
-      <div class="container mx-auto px-6">
-        <div class="flex items-end justify-between gap-6">
-          <div>
-            <h2 class="font-display font-extrabold text-3xl md:text-4xl">Featured Projects</h2>
-            <p class="text-white/60">Map gunung & obby unggulan Indo Elite Studio.</p>
-          </div>
-        </div>
-        <div id="projects-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10"></div>
-      </div>
-    </section>
-
-    <!-- TEAM -->
-    <section id="team" class="py-20 md:py-28 border-t border-white/10">
-      <div class="container mx-auto px-6">
-        <h2 class="font-display font-extrabold text-3xl md:text-4xl">Our Team</h2>
-        <p class="text-white/60">Orang-orang di balik Indo Elite Studio.</p>
-        <div id="team-grid" class="grid md:grid-cols-3 gap-8 mt-10"></div>
-      </div>
-    </section>
-
-    <!-- SERVICES -->
-    <section id="services" class="py-20 md:py-28 border-t border-white/10">
-      <div class="container mx-auto px-6">
-        <h2 class="font-display font-extrabold text-3xl md:text-4xl">Services & Pricing</h2>
-        <p class="text-white/60" id="services-note">Daftar paket & fitur.</p>
-        <div id="packages" class="grid md:grid-cols-2 gap-8 mt-8"></div>
-        <div id="features" class="grid md:grid-cols-3 gap-6 mt-8"></div>
-      </div>
-    </section>
-
-    <!-- CONTACT / FOOTER -->
-    <section id="contact" class="py-16 border-t border-white/10">
-      <div class="container mx-auto px-6">
-        <div class="rounded-2xl p-8 lg:p-10 bg-white/[.03] ring-1 ring-white/[.08] backdrop-blur-md">
-          <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 class="font-display text-2xl font-bold">Mau join / collab?</h3>
-              <p class="text-white/70">Terbuka untuk creator & player. Event mingguan & support channel siap.</p>
+        <section id="tim" class="py-24 reveal-on-scroll">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-3 text-neon-teal">Tim Indo Elite Studio</h2>
+                    <p class="text-lg text-dark-text">Orang-orang di balik layar.</p>
+                </div>
+                <div id="team-grid" class="grid md:grid-cols-3 gap-10"></div>
             </div>
-            <div class="flex gap-3">
-              <a id="footer-discord" class="btn-primary">Join Discord</a>
-              <a id="footer-roblox" class="btn-ghost">Roblox Group</a>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-wrap justify-center gap-4 mt-8" id="footer-socials"></div>
-        <div class="text-center text-white/50 text-sm mt-6">&copy; <span id="year"></span> <span id="brand-foot"></span>. All rights reserved.</div>
-      </div>
-    </section>
-  </main>
+        </section>
 
-  <script src="config.js"></script>
-  <script src="main.js"></script>
+    </main>
+
+    <footer id="kontak" class="py-16 reveal-on-scroll border-t border-border-color">
+        <div id="footer-container" class="container mx-auto px-6 text-center"></div>
+    </footer>
+
 </body>
 </html>
