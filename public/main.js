@@ -156,7 +156,34 @@
       setTimeout(()=> el.remove(), 300);
     });
   }
+function mobileMenu(){
+  const btn = document.querySelector("#mobile-menu");
+  const drawer = document.querySelector("#mobile-drawer");
+  const closeBtn = document.querySelector("#drawer-close");
 
+  // set link discord di drawer
+  const discord = (CONFIG.socials||[]).find(s=>/discord/i.test(s.name))?.url || "#";
+  const drawerDiscord = document.querySelector("#drawer-discord");
+  if (drawerDiscord) drawerDiscord.setAttribute("href", discord);
+
+  if(!btn || !drawer) return;
+
+  const open = ()=>{
+    drawer.classList.remove("hidden");             // muncul dulu
+    requestAnimationFrame(()=>drawer.classList.add("is-open")); // lalu animasi slide
+  };
+  const close = ()=>{
+    drawer.classList.remove("is-open");            // tutup slide
+    setTimeout(()=>drawer.classList.add("hidden"), 200); // sembunyikan setelah animasi
+  };
+
+  btn.addEventListener("click", open);
+  closeBtn && closeBtn.addEventListener("click", close);
+  drawer.querySelector(".drawer-backdrop")?.addEventListener("click", close);
+  drawer.querySelectorAll("a").forEach(a=> a.addEventListener("click", close));
+  document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") close(); });
+}
+  
   function init(){
     setBranding();
     renderFooterSocials();
@@ -166,6 +193,7 @@
     revealOnScroll();
     heroPointerGlow();
     preloader();
+    mobileMenu();
   }
 
   document.addEventListener("DOMContentLoaded", init);
