@@ -1,0 +1,14 @@
+{
+  "name": "indo-elite-studio-website",
+  "version": "1.0.0",
+  "description": "Website Portfolio Indo Elite Studio",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./public/style.css",
+    "watch": "tailwindcss -i ./src/input.css -o ./public/style.css --watch"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3"
+  }
+}
