@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id"> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +9,10 @@
         try {
           var theme = localStorage.getItem('theme');
           var html = document.documentElement;
-          // Di tema Cyber-Grid, kita asumsikan 'dark' adalah default
-          // Jadi kita HANYA hapus 'dark' jika user memilih 'light'
           if (theme === 'light') {
             html.classList.remove('dark');
           } else {
-            html.classList.add('dark');
+            html.classList.add('dark'); // Default ke 'dark' untuk tema Cyber
           }
         } catch (e) { /* Abaikan error */ }
       })();
