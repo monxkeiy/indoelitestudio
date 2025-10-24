@@ -1,13 +1,32 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script>
+      (function() {
+        try {
+          var theme = localStorage.getItem('theme');
+          var html = document.documentElement;
+          // Di tema Cyber-Grid, kita asumsikan 'dark' adalah default
+          // Jadi kita HANYA hapus 'dark' jika user memilih 'light'
+          if (theme === 'light') {
+            html.classList.remove('dark');
+          } else {
+            html.classList.add('dark');
+          }
+        } catch (e) { /* Abaikan error */ }
+      })();
+    </script>
+    
     <title>Indo Elite Studio</title> 
+    
     <link href="style.css" rel="stylesheet">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
@@ -15,11 +34,12 @@
     <script src="config.js" defer></script>
     <script src="main.js" defer></script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
+
+<body>
 
     <header id="main-header" class="navbar-default">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" id="nav-brand" class="text-2xl font-bold text-primary-600 dark:text-primary-400"></a>
+            <a href="#" id="nav-brand" class="text-2xl font-bold text-neon-teal hover:text-neon-pink transition-colors"></a>
             
             <div id="nav-links" class="hidden md:flex items-center space-x-8">
                 <a href="#jasa" class="navbar-link" data-target="#jasa">Jasa</a>
@@ -28,9 +48,9 @@
                 <a href="#kontak" class="navbar-link" data-target="#kontak">Kontak</a>
             </div>
             
-            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-                <ion-icon name="moon-outline" class="text-xl hidden dark:inline"></ion-icon>
-                <ion-icon name="sunny-outline" class="text-xl inline dark:hidden"></ion-icon>
+            <button id="darkModeToggle" class="dark-mode-toggle-button">
+                <ion-icon name="moon-outline" class="text-2xl hidden dark:inline"></ion-icon>
+                <ion-icon name="sunny-outline" class="text-2xl inline dark:hidden"></ion-icon>
             </button>
         </nav>
     </header>
@@ -38,34 +58,35 @@
     <main>
         
         <section id="home" class="container mx-auto px-6 py-32 text-center">
-            <h1 id="hero-title" class="text-5xl md:text-7xl font-extrabold mb-4"></h1>
-            <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10">
+            <h1 id="hero-title" class="text-5xl md:text-7xl font-extrabold mb-4 text-neon-teal" style="text-shadow: 0 0 10px rgba(0, 244, 224, 0.7);">
+                </h1>
+            <p class="text-xl md:text-2xl text-dark-text mb-10">
                 Solusi Profesional untuk Jasa Pembuatan Map Roblox.
             </p>
-            <a href="#jasa" class="bg-primary-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-primary-700 transition-transform duration-300 transform hover:scale-105">
+            <a href="#jasa" class="cta-button">
                 Lihat Daftar Harga
             </a>
         </section>
 
-        <section id="jasa" class="py-24 bg-white dark:bg-gray-800 reveal-on-scroll">
+        <section id="jasa" class="py-24 reveal-on-scroll">
             <div id="jasa-container" class="container mx-auto px-6"></div>
         </section>
 
         <section id="project" class="py-24 reveal-on-scroll">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold mb-3">Project Kami</h2>
-                    <p class="text-lg text-gray-600 dark:text-gray-300">Beberapa map yang telah kami kerjakan.</p>
+                    <h2 class="text-4xl font-bold mb-3 text-neon-teal">Project Kami</h2>
+                    <p class="text-lg text-dark-text">Beberapa map yang telah kami kerjakan.</p>
                 </div>
                 <div id="project-grid" class="grid md:grid-cols-2 gap-10"></div>
             </div>
         </section>
 
-        <section id="tim" class="py-24 bg-white dark:bg-gray-800 reveal-on-scroll">
+        <section id="tim" class="py-24 reveal-on-scroll">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold mb-3">Tim Indo Elite Studio</h2>
-                    <p class="text-lg text-gray-600 dark:text-gray-300">Orang-orang di balik layar.</p>
+                    <h2 class="text-4xl font-bold mb-3 text-neon-teal">Tim Indo Elite Studio</h2>
+                    <p class="text-lg text-dark-text">Orang-orang di balik layar.</p>
                 </div>
                 <div id="team-grid" class="grid md:grid-cols-3 gap-10"></div>
             </div>
@@ -73,7 +94,7 @@
 
     </main>
 
-    <footer id="kontak" class="bg-gray-900 dark:bg-black text-gray-300 py-16 reveal-on-scroll">
+    <footer id="kontak" class="py-16 reveal-on-scroll border-t border-border-color">
         <div id="footer-container" class="container mx-auto px-6 text-center"></div>
     </footer>
 
