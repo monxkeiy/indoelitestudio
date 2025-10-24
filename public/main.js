@@ -1,38 +1,51 @@
-/* Main logic Indo Elite Studio premium */
+/* Elite Aurora main using CONFIG */
 (function(){
-  const C = window.IES_CONFIG || { brand: "Indo Elite Studio", socials: {} };
+  const ICONS = {
+    "logo-instagram": '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2a3 3 0 013 3v10a3 3 0 01-3 3H7a3 3 0 01-3-3V7a3 3 0 013-3h10z"/><circle cx="12" cy="12" r="3.2"/><circle cx="17.5" cy="6.5" r="1"/></svg>',
+    "logo-discord": '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.369A16.318 16.318 0 0016.886 3a10.66 10.66 0 00-1.966 3.09A13.239 13.239 0 0012 6a13.243 13.243 0 00-2.92.09A10.66 10.66 0 007.114 3 16.318 16.318 0 003.683 4.37C2.254 6.808 1.77 9.148 1.934 11.449c1.516 1.09 3.234 1.912 5.108 2.426a9.06 9.06 0 001.03-1.715c-.58-.214-1.135-.472-1.665-.77.14-.104.274-.211.405-.322 3.161 1.477 6.448 1.477 9.61 0 .132.111.266.218.405.322-.53.298-1.085.556-1.665.77.284.603.629 1.175 1.03 1.715 1.874-.514 3.592-1.336 5.108-2.426.224-3.099-.523-5.996-1.991-8.08zM9.25 12.5c-.69 0-1.25-.67-1.25-1.5s.56-1.5 1.25-1.5S10.5 10.17 10.5 11s-.56 1.5-1.25 1.5zm5.5 0c-.69 0-1.25-.67-1.25-1.5s.56-1.5 1.25-1.5S16 10.17 16 11s-.56 1.5-1.25 1.5z"/></svg>',
+    "logo-tiktok": '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8.039a6.962 6.962 0 004 1.287V6.27a8.84 8.84 0 01-4-1.101V14.5c0 2.76-2.24 5-5 5s-5-2.24-5-5 2.24-5 5-5c.344 0 .68.036 1 .104V6.09A7.99 7.99 0 008 5c-4.418 0-8 3.582-8 8s3.582 8 8 8 8-3.582 8-8V8.039z"/></svg>',
+    "link": '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12a5 5 0 015-5h3v2h-3a3 3 0 000 6h3v2h-3a5 5 0 01-5-5zm7-1h3a3 3 0 010 6h-3v2h3a5 5 0 000-10h-3v2z"/><path d="M8 11h8v2H8z"/></svg>'
+  };
 
-  const $ = (sel, root=document) => root.querySelector(sel);
-  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+  const $ = (sel, root=document)=>root.querySelector(sel);
+  const $$ = (sel, root=document)=>Array.from(root.querySelectorAll(sel));
+
+  function text(el, val){ if(el) el.textContent = val ?? ""; }
+  function html(el, val){ if(el) el.innerHTML = val ?? ""; }
 
   function setBranding(){
-    $("#brand").textContent = C.brand;
-    $("#year").textContent = new Date().getFullYear();
-    const d = C.socials?.discord || "#";
-    const r = C.socials?.robloxGroup || "#";
-    $("#discord-link")?.setAttribute("href", d);
-    $("#cta-discord")?.setAttribute("href", d);
-    $("#about-discord")?.setAttribute("href", d);
-    $("#footer-discord")?.setAttribute("href", d);
-    $("#footer-roblox")?.setAttribute("href", r);
+    text($("#brand"), CONFIG.studioName);
+    text($("#brand-foot"), CONFIG.studioName);
+    text($("#year"), new Date().getFullYear());
+    $("#nav-discord")?.setAttribute("href", (CONFIG.socials||[]).find(s=>/discord/i.test(s.name))?.url || "#");
+    $("#cta-discord")?.setAttribute("href", (CONFIG.socials||[]).find(s=>/discord/i.test(s.name))?.url || "#");
+    $("#footer-discord")?.setAttribute("href", (CONFIG.socials||[]).find(s=>/discord/i.test(s.name))?.url || "#");
+    $("#footer-roblox")?.setAttribute("href", "#");
+    text($("#hero-brand"), CONFIG.studioName);
+  }
 
-    // Stats
-    $("#stat-projects").textContent = C.stats?.projects ?? C.projects?.length ?? "--";
-    $("#stat-events").textContent = C.stats?.events ?? "--";
-    $("#stat-community").textContent = C.stats?.members ?? "--";
+  function makeSocialIcon(icon, url){
+    const svg = ICONS[icon] || ICONS["link"];
+    return `<a href="${url}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 ring-1 ring-white/10 hover:bg-white/10">${svg}<span class="text-sm hidden sm:inline">` + (icon.split("-")[1]||"link") + `</span></a>`;
+  }
+
+  function renderFooterSocials(){
+    const wrap = $("#footer-socials");
+    if(!wrap) return;
+    wrap.innerHTML = (CONFIG.socials||[]).map(s=>makeSocialIcon(s.icon, s.url)).join("");
   }
 
   function projectCard(p){
+    const cover = p.imageUrl || "assets/logo.png";
     const tags = (p.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("");
-    return `<article class="project reveal-on" data-type="${(p.type||[]).join(",")}">
-      <div class="cover" style="background-image:url('${p.cover}')"></div>
+    return `<article class="project reveal">
+      <div class="cover" style="background-image:url('${cover}'), radial-gradient(400px 180px at 30% 20%, rgba(91,141,255,.18), transparent 60%);"></div>
       <div class="body">
-        <div class="title">${p.name}</div>
+        <div class="title">${p.title||""}</div>
         <p class="desc">${p.description||""}</p>
         <div class="tags">${tags}</div>
-        <div class="actions">
-          <a class="btn-primary" href="${p.robloxUrl||"#"}" target="_blank" rel="noopener">Play</a>
-          <a class="btn-ghost" href="${p.discordUrl||C.socials?.discord||"#"}" target="_blank" rel="noopener">Discord</a>
+        <div class="actions" style="margin-top:.75rem; display:flex; gap:.6rem">
+          <a class="btn-primary" href="${p.gameUrl||'#'}" target="_blank" rel="noopener">Play</a>
         </div>
       </div>
     </article>`;
@@ -41,7 +54,7 @@
   function renderProjects(){
     const grid = $("#projects-grid");
     if(!grid) return;
-    grid.innerHTML = (C.projects||[]).map(projectCard).join("");
+    grid.innerHTML = (CONFIG.projects||[]).map(projectCard).join("");
 
     // Hover glow tracking
     $$(".project").forEach(card => {
@@ -54,26 +67,67 @@
       });
     });
 
-    // Filtering
-    $$(".chip").forEach(chip=>{
-      chip.addEventListener("click", ()=>{
-        const f = chip.dataset.filter;
-        $$(".chip").forEach(c=>c.classList.remove("ring-brand-500","text-white"));
-        chip.classList.add("ring-brand-500","text-white");
-        $$(".project").forEach(card=>{
-          const type = card.getAttribute("data-type")||"";
-          if(f==="all" || type.includes(f)) card.style.display = "";
-          else card.style.display = "none";
-        });
-      });
-    });
+    // stats
+    text($("#stat-projects"), (CONFIG.projects||[]).length);
+  }
+
+  function teamCard(m){
+    const img = m.imageUrl || "assets/logo.png";
+    const socials = (m.socials||[]).map(s=>`<a href="${s.url}" target="_blank" rel="noopener" class="inline-flex p-2 rounded-lg bg-white/5 ring-1 ring-white/10 hover:bg-white/10">${ICONS[s.icon]||ICONS.link}</a>`).join("");
+    return `<article class="team-card reveal">
+      <div class="flex items-center gap-4">
+        <img src="${img}" onerror="this.src='assets/logo.png'" class="team-ava" alt="${m.name||'member'}"/>
+        <div>
+          <div class="font-display font-bold text-lg">${m.name||""}</div>
+          <div class="text-white/60 text-sm">${m.role||""}</div>
+        </div>
+      </div>
+      <div class="flex gap-2 mt-4">${socials}</div>
+    </article>`;
+  }
+
+  function renderTeam(){
+    const grid = $("#team-grid");
+    if(!grid) return;
+    const team = CONFIG.team || [];
+    grid.innerHTML = team.map(teamCard).join("");
+    text($("#stat-team"), team.length);
+  }
+
+  function renderServices(){
+    const wrapPacks = $("#packages");
+    const wrapFeat = $("#features");
+    const s = CONFIG.services || {};
+    const packages = s.packages || [];
+    const features = s.features || { categories: [] };
+    const tiersView = (tiers)=> tiers.map(t=>`<div class="rounded-xl p-4 bg-white/[.04] ring-1 ring-white/10">
+      <div class="font-semibold">${t.name}</div>
+      <div class="text-brand-500 font-bold mt-1">${t.price||""}</div>
+      ${t.note?`<div class="text-white/60 text-sm mt-1">${t.note}</div>`:""}
+    </div>`).join("");
+
+    wrapPacks.innerHTML = packages.map(p=>`<div class="rounded-2xl p-6 bg-white/[.03] ring-1 ring-white/[.08] backdrop-blur-md reveal">
+      <div class="font-display text-xl font-bold">${p.title}</div>
+      <div class="grid gap-3 mt-4">${tiersView(p.tiers||[])}</div>
+    </div>`).join("");
+
+    $("#services-note").textContent = s.note || "";
+    text($("#stat-services"), packages.length);
+
+    wrapFeat.innerHTML = (features.categories||[]).map(cat=>`<div class="rounded-2xl p-6 bg-white/[.03] ring-1 ring-white/[.08] backdrop-blur-md reveal">
+      <div class="font-display font-semibold">${cat.name}</div>
+      <ul class="mt-3 space-y-2 text-white/70 text-sm">
+        ${(cat.items||[]).map(i=>`<li>• ${i}</li>`).join("")}
+      </ul>
+    </div>`).join("");
   }
 
   function revealOnScroll(){
-    const items = $$(".reveal-on, .project.reveal-on");
+    const items = $$(".reveal");
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
         if(entry.isIntersecting){
+          entry.target.style.visibility = "visible";
           entry.target.classList.add("visible");
           io.unobserve(entry.target);
         }
@@ -103,25 +157,16 @@
     });
   }
 
-  function mobileMenu(){
-    const btn = $("#mobile-menu");
-    if(!btn) return;
-    let open = false;
-    btn.addEventListener("click", ()=>{
-      open = !open;
-      // Simple demo: scroll to projects when opened
-      if(open){
-        document.location.hash = "#projects";
-      }
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", ()=>{
+  function init(){
     setBranding();
+    renderFooterSocials();
     renderProjects();
+    renderTeam();
+    renderServices();
     revealOnScroll();
     heroPointerGlow();
     preloader();
-    mobileMenu();
-  });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
 })();
