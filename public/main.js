@@ -1,33 +1,38 @@
 /*
- * SCRIPT PERAKIT HALAMAN (MAIN LOGIC) - V4.4 (Anti-Race Condition)
+ * SCRIPT PERAKIT HALAMAN (MAIN LOGIC) - V4.6 (FIXED EXECUTION ORDER)
  *
- * UPGRADE:
- * - Menghapus semua 'alert()'
- * - Menghapus wrapper 'document.addEventListener('DOMContentLoaded', ...)'
- * - Script ini sekarang di-load di akhir <body> (lihat index.html)
- * - Ini menjamin semua elemen HTML sudah ada SEBELUM script ini berjalan.
- * - Ini adalah solusi paling 'bug-free'.
+ * UPGRADE (BUG FIX):
+ * - Memindahkan `initScrollReveal()` dan `initScrollSpy()`
+ * - agar dijalankan SETELAH `loadPageContent()` selesai.
+ * - Ini memastikan elemen-elemen HTML (seperti `.reveal-on-scroll`)
+ * - sudah ada SEBELUM kita mencoba memasang animasi ke elemen tersebut.
+ * - Ini adalah perbaikan "kompleks" dan "tidak setengah-setengah" yang benar.
  */
 
 // Cek #1: Pastikan CONFIG object ada
 if (typeof CONFIG === 'undefined') {
     console.error('FATAL ERROR: config.js tidak ditemukan atau gagal di-load. Script berhenti.');
-    // Berhenti di sini jika config.js gagal di-load
 } else {
 
     // Jika config.js ADA, jalankan semuanya
     console.log("CONFIG ditemukan. Memulai perakitan halaman...");
     
-    // --- INISIALISASI SEMUA FITUR ---
+    // --- INISIALISASI FITUR DASAR ---
+    // Fitur-fitur ini tidak bergantung pada konten dinamis
     try { initDarkMode(); } catch (e) { console.error('Error in initDarkMode:', e); }
     try { initDynamicNavbar(); } catch (e) { console.error('Error in initDynamicNavbar:', e); }
-    try { initScrollReveal(); } catch (e) { console.error('Error in initScrollReveal:', e); }
-    try { initScrollSpy(); } catch (e) { console.error('Error in initScrollSpy:', e); }
     
-    // Memuat konten dari config.js
+    // --- 1. BUAT KONTEN DINAMIS ---
+    // (Menjalankan loadBasicInfo, loadServices, dll.)
     loadPageContent();
 
-    console.log("Website Indo Elite Studio v4.4 (Anti-Race Condition) berhasil dirakit!");
+    // --- 2. INISIALISASI FITUR SCROLL ---
+    // Fitur-fitur ini HARUS dijalankan SETELAH loadPageContent()
+    // agar bisa "menemukan" elemen-elemen yang baru dibuat.
+    try { initScrollReveal(); } catch (e) { console.error('Error in initScrollReveal:', e); }
+    try { initScrollSpy(); } catch (e) { console.error('Error in initScrollSpy:', e); }
+
+    console.log("Website Indo Elite Studio v4.6 (Fixed Order) berhasil dirakit!");
 }
 
 
@@ -59,7 +64,10 @@ function initDynamicNavbar() {
 
 function initScrollReveal() {
     const revealElements = document.querySelectorAll('.reveal-on-scroll');
-    if (revealElements.length === 0) return;
+    if (revealElements.length === 0) {
+        console.warn("initScrollReveal: Tidak menemukan elemen .reveal-on-scroll.");
+        return; // Ini tidak masalah jika memang tidak ada
+    }
     const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
     const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -70,6 +78,7 @@ function initScrollReveal() {
         });
     }, observerOptions);
     revealElements.forEach(el => observer.observe(el));
+    console.log("initScrollReveal BERHASIL: Mengamati " + revealElements.length + " elemen.");
 }
 
 function initScrollSpy() {
@@ -88,6 +97,7 @@ function initScrollSpy() {
         });
     }, observerOptions);
     sections.forEach(section => observer.observe(section));
+    console.log("initScrollSpy BERHASIL: Mengamati " + sections.length + " seksi.");
 }
 
 
@@ -158,7 +168,6 @@ function loadServices() {
         throw new Error("'services', 'packages', atau 'features' tidak ada di config.");
     }
     
-    // ... (HTML template sama persis) ...
     let html = `
         <div class="text-center mb-16">
             <h2 class="text-4xl font-bold mb-3 text-neon-teal">${services.title}</h2>
@@ -207,7 +216,6 @@ function loadProjects() {
     }
     if (!projects) throw new Error("'projects' tidak ada di config.");
     
-    // ... (HTML template sama persis) ...
     grid.innerHTML = projects.map(project => `
         <div class="cyber-card group !p-0 overflow-hidden">
             <img src="${project.imageUrl}" alt="${project.title}" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
@@ -233,7 +241,6 @@ function loadTeam() {
     }
     if (!team) throw new Error("'team' tidak ada di config.");
     
-    // ... (HTML template sama persis) ...
     grid.innerHTML = team.map(member => `
         <div class="cyber-card text-center">
             <img src="${member.imageUrl}" alt="${member.name}" class="cyber-team-img">
@@ -261,7 +268,6 @@ function loadFooter() {
     }
     if (!socials || !studioName) throw new Error("'socials' atau 'studioName' tidak ada di config.");
     
-    // ... (HTML template sama persis) ...
     container.innerHTML = `
         <h3 class="text-3xl font-bold mb-6 text-neon-teal">Hubungi Kami</h3>
         <p class="text-lg mb-8 text-dark-text">Siap memulai project Anda? Hubungi kami melalui sosial media.</p>
