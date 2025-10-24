@@ -12,7 +12,7 @@
           if (theme === 'light') {
             html.classList.remove('dark');
           } else {
-            html.classList.add('dark'); // Default ke 'dark' untuk tema Cyber
+            html.classList.add('dark'); // Default ke 'dark'
           }
         } catch (e) { /* Abaikan error */ }
       })();
@@ -21,31 +21,26 @@
     <title>Indo Elite Studio</title> 
     
     <link href="style.css" rel="stylesheet">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     
-    <script src="config.js" defer></script>
-    <script src="main.js" defer></script>
-</head>
+    </head>
 
 <body>
 
     <header id="main-header" class="navbar-default">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#" id="nav-brand" class="text-2xl font-bold text-neon-teal hover:text-neon-pink transition-colors"></a>
-            
             <div id="nav-links" class="hidden md:flex items-center space-x-8">
                 <a href="#jasa" class="navbar-link" data-target="#jasa">Jasa</a>
                 <a href="#project" class="navbar-link" data-target="#project">Project</a>
-                <a href="#tim" class="navbar-link" data-target="#tim">Tim</a>
+                <a href="#tim" class_real="navbar-link" data-target="#tim">Tim</a>
                 <a href="#kontak" class="navbar-link" data-target="#kontak">Kontak</a>
             </div>
-            
             <button id="darkModeToggle" class="dark-mode-toggle-button">
                 <ion-icon name="moon-outline" class="text-2xl hidden dark:inline"></ion-icon>
                 <ion-icon name="sunny-outline" class="text-2xl inline dark:hidden"></ion-icon>
@@ -96,5 +91,8 @@
         <div id="footer-container" class="container mx-auto px-6 text-center"></div>
     </footer>
 
+    <script src="config.js"></script>
+    <script src="main.js"></script>
+    
 </body>
 </html>
