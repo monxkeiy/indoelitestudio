@@ -1,18 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class', // Mengaktifkan dark mode berbasis class
+  darkMode: 'class',
   content: [
-    './public/index.html',  // Memindai class di HTML
-    './public/main.js',     // Memindai class yang dibuat oleh JavaScript
+    './public/index.html',
+    './public/main.js',
   ],
   theme: {
     extend: {
       fontFamily: {
-        // Font Poppins yang modern dan aesthetic
         sans: ['Poppins', 'sans-serif'],
       },
       colors: {
-        // Palet warna 'keren' yang bisa Anda gunakan (cth: text-primary-500)
         primary: {
           '50': '#eff6ff',
           '100': '#dbeafe',
@@ -26,7 +24,24 @@ module.exports = {
           '900': '#1e3a8a',
           '950': '#172554',
         },
-      }
+      },
+      // --- TAMBAHKAN BAGIAN INI ---
+      keyframes: {
+        'fade-in-up': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(20px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+      },
+      animation: {
+        'fade-in-up': 'fade-in-up 0.6s ease-out both',
+      },
+      // --- AKHIR TAMBAHAN ---
     },
   },
   plugins: [],
